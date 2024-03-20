@@ -1,9 +1,13 @@
-import Image from "next/image";
+"use client";
+import Chatbot from "./components/chatbot/chatbot";
 
 export default function Home() {
   return (
     <section>
-      <h1>Home</h1>
+      <div>
+        <h1>Home</h1>
+        <Chatbot />
+      </div>
     </section>
   );
 }
