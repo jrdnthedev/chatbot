@@ -16,7 +16,7 @@ export default function ChatBot() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer API-KEY${apiKey}`,
+            Authorization: `Bearer ${apiKey}`,
           },
           body: JSON.stringify({
             model: "gpt-3.5-turbo",
