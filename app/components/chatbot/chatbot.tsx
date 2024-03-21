@@ -5,6 +5,7 @@ export default function ChatBot() {
   const [inputMessage, setInputMessage] = useState("");
   const [outputMessage, setOutputMessage] = useState("");
   const [isSearching, setIsSearching] = useState(true);
+  const apiKey = process.env.NEXT_PUBLIC_API_KEY;
 
   const sendMessage = async () => {
     try {
@@ -15,7 +16,7 @@ export default function ChatBot() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: "Bearer API-KEY",
+            Authorization: `Bearer API-KEY${apiKey}`,
           },
           body: JSON.stringify({
             model: "gpt-3.5-turbo",
