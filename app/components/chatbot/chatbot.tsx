@@ -1,72 +1,43 @@
 import React, { useState } from "react";
 import LoadingSpinner from "../loading_spinner/loading_spinner";
+import { useUIState, useActions } from "ai/rsc";
+import type { AI } from "../../action";
 
 export default function ChatBot() {
-  const [inputMessage, setInputMessage] = useState("");
-  const [outputMessage, setOutputMessage] = useState("");
-  const [outputAssisstantMessage, setOutputAssisstantMessage] = useState("");
-  const [isSearching, setIsSearching] = useState(true);
-  const apiKey = process.env.NEXT_PUBLIC_API_KEY;
-
-  const sendMessage = async () => {
-    try {
-      setIsSearching(false);
-      const response = await fetch(
-        "https://api.openai.com/v1/chat/completions",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${apiKey}`,
-          },
-          body: JSON.stringify({
-            model: "gpt-3.5-turbo",
-            messages: [{ role: "user", content: inputMessage }],
-            max_tokens: 150,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch response from ChatGPT API");
-      }
-      const responseData = await response.json();
-      console.log(responseData);
-      setOutputMessage(responseData.choices[0].message.content);
-      setOutputAssisstantMessage(responseData.choices[0].message.role);
-      setIsSearching(true);
-    } catch (error) {
-      console.error("Error sending message to ChatGPT API:", error);
-    }
-  };
+  const [inputValue, setInputValue] = useState("");
+  const [messages, setMessages] = useUIState<typeof AI>();
+  const { submitUserMessage } = useActions<typeof AI>();
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputMessage(event.target.value);
+    setInputValue(event.target.value);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    sendMessage();
+    // Add user message to UI state
+    setMessages((currentMessages) => [
+      ...currentMessages,
+      {
+        id: Date.now(),
+        display: <div>{inputValue}</div>,
+      },
+    ]);
+
+    // Submit and get response message
+    const responseMessage = await submitUserMessage(inputValue);
+    setMessages((currentMessages) => [...currentMessages, responseMessage]);
+
+    setInputValue("");
   };
-  /*Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.*/
-  /*Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. */
   return (
     <section className="flex-1 flex-col py-8 px-8 max-w-sm mx-auto bg-white rounded-xl shadow-lg space-y-2 sm:py-4 sm:flex sm:space-y-0 sm:space-x-6">
       <div className="mb-4">
-        {isSearching ? (
-          <>
-            <div className="mb-2">
-              <h3>Question:</h3>
-              <p>{inputMessage}</p>
-            </div>
-            <div>
-              <h3>Chat {outputAssisstantMessage}:</h3>
-              <p>{outputMessage}</p>
-            </div>
-          </>
-        ) : (
-          <LoadingSpinner />
-        )}
+        {messages.map((message) => (
+          <div key={message.id} className="mb-4">
+            <p>Role:</p>
+            <p>{message.display}</p>
+          </div>
+        ))}
       </div>
 
       <form onSubmit={handleSubmit} className="flex mx-0">
