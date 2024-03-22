@@ -4,6 +4,7 @@ import LoadingSpinner from "../loading_spinner/loading_spinner";
 export default function ChatBot() {
   const [inputMessage, setInputMessage] = useState("");
   const [outputMessage, setOutputMessage] = useState("");
+  const [outputAssisstantMessage, setOutputAssisstantMessage] = useState("");
   const [isSearching, setIsSearching] = useState(true);
   const apiKey = process.env.NEXT_PUBLIC_API_KEY;
 
@@ -32,6 +33,7 @@ export default function ChatBot() {
       const responseData = await response.json();
       console.log(responseData);
       setOutputMessage(responseData.choices[0].message.content);
+      setOutputAssisstantMessage(responseData.choices[0].message.role);
       setIsSearching(true);
     } catch (error) {
       console.error("Error sending message to ChatGPT API:", error);
@@ -54,11 +56,11 @@ export default function ChatBot() {
         {isSearching ? (
           <>
             <div className="mb-2">
-              <p>Question:</p>
+              <h3>Question:</h3>
               <p>{inputMessage}</p>
             </div>
             <div>
-              <p>Response:</p>
+              <h3>Chat {outputAssisstantMessage}:</h3>
               <p>{outputMessage}</p>
             </div>
           </>
