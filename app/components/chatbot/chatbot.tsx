@@ -30,9 +30,9 @@ export default function ChatBot() {
     setInputValue("");
   };
   return (
-    <section className="flex-1 flex-col py-8 px-8 max-w-sm mx-auto bg-white rounded-xl shadow-lg space-y-2 sm:py-4 sm:flex sm:space-y-0 sm:space-x-6">
-      <div className="mb-4">
-        {messages.map((message) => (
+    <section>
+      <div className="mb-4 h-96 overflow-auto flex flex-col-reverse">
+        {[...messages].reverse().map((message) => (
           <div key={message.id} className="mb-4">
             <p>Role:</p>
             <p>{message.display}</p>
@@ -50,7 +50,7 @@ export default function ChatBot() {
         />
         <button
           type="submit"
-          className="p-1.5 bg-green-300 font-medium text-white font-sans"
+          className="p-1.5 bg-violet-300 font-medium text-white font-sans"
         >
           Send
         </button>
