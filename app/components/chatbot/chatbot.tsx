@@ -30,7 +30,7 @@ export default function ChatBot() {
     setInputValue("");
   };
   return (
-    <section>
+    <section className="m-0">
       <div className="mb-4 h-96 overflow-auto flex flex-col-reverse">
         {[...messages].reverse().map((message) => (
           <div key={message.id} className="mb-4">
