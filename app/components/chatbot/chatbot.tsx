@@ -35,7 +35,7 @@ export default function ChatBot() {
         {[...messages].reverse().map((message) => (
           <div key={message.id} className="mb-4">
             <p>Role:</p>
-            <p>{message.display}</p>
+            {message.display}
           </div>
         ))}
       </div>
