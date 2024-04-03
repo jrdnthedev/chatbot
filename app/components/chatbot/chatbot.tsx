@@ -32,12 +32,18 @@ export default function ChatBot() {
   return (
     <section className="m-0">
       <div className="mb-4 h-96 overflow-auto flex flex-col-reverse">
-        {[...messages].reverse().map((message) => (
-          <div key={message.id} className="mb-4">
-            <p>Role:</p>
-            {message.display}
+        {messages ? (
+          [...messages].reverse().map((message) => (
+            <div key={message.id} className="mb-4">
+              <p>Role:</p>
+              {message.display}
+            </div>
+          ))
+        ) : (
+          <div>
+            <p>please ask me something...</p>
           </div>
-        ))}
+        )}
       </div>
 
       <form onSubmit={handleSubmit} className="flex mx-0">
